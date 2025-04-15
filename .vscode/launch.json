@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost/SRA/index.php",
+            "url": "http://localhost/SRA_PROJ/index.php",
             "webRoot": "${workspaceFolder}"
         }
     ]
