@@ -425,6 +425,37 @@
             margin-top: 4px;
             font-style: italic;
         }
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+            width: 100%;
+            appearance: none;
+            color: #888; /* Default: gray for placeholder */
+        }
+        .custom-select:valid {
+            color: #000;
+        }
+        .custom-select option[value=""] {
+            color: #888;
+        }
+
+        .custom-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 14px;
+            color: #888;
+        }
 
         @media (max-width: 768px) {
             .create-trader-form {
@@ -446,6 +477,7 @@
             .content-card {
                 padding: 20px;
             }
+
         }
     </style>
 </head>
@@ -646,6 +678,32 @@
                             <label for="companyAddress">Company Address</label>
                             <input type="text" id="companyAddress" name="companyAddress" placeholder="Enter company address" required>
                         </div>
+                        <div class="form-group">
+                            <label for="region">Region</label>
+                            <div class="custom-select-wrapper">
+                                <select id="region" name="region" class="custom-select" required>
+                                    <option value="" disabled selected>Select Region</option>
+                                    <option value="NCR">National Capital Region (NCR)</option>
+                                    <option value="CAR">Cordillera Administrative Region (CAR)</option>
+                                    <option value="Region I">Region I - Ilocos Region</option>
+                                    <option value="Region II">Region II - Cagayan Valley</option>
+                                    <option value="Region III">Region III - Central Luzon</option>
+                                    <option value="Region IV-A">Region IV-A - CALABARZON</option>
+                                    <option value="MIMAROPA">MIMAROPA Region</option>
+                                    <option value="Region V">Region V - Bicol Region</option>
+                                    <option value="Region VI">Region VI - Western Visayas</option>
+                                    <option value="Region VII">Region VII - Central Visayas</option>
+                                    <option value="Region VIII">Region VIII - Eastern Visayas</option>
+                                    <option value="Region IX">Region IX - Zamboanga Peninsula</option>
+                                    <option value="Region X">Region X - Northern Mindanao</option>
+                                    <option value="Region XI">Region XI - Davao Region</option>
+                                    <option value="Region XII">Region XII - SOCCSKSARGEN</option>
+                                    <option value="CARAGA">CARAGA Region</option>
+                                    <option value="BARMM">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+                                </select>
+                                <span class="custom-arrow">&#9662;</span>
+                            </div>
+                        </div>                        
                         
                         <!-- Password Fields Last -->
                         <div class="form-group">
@@ -860,27 +918,46 @@
 
         document.getElementById('create-trader-form').addEventListener('submit', function(e) {
             e.preventDefault();
+
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmTraderPassword').value;
-            
+
             // Check if passwords match
             if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
+            alert('Passwords do not match!');
+            return;
             }
-            
+
             // Check password requirements
             if (!checkPasswordRequirements(password, 'trader')) {
-                alert('Password does not meet all requirements!');
-                return;
+            alert('Password does not meet all requirements!');
+            return;
             }
-            
-            // Here you would normally send the data to your backend
-            alert('Trader account created successfully!');
+
+            // Collect form data
+            const formData = new FormData(this);
+
+        fetch('../../backend/admin/accountsettings.php', {
+        method: 'POST',
+        body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+            alert(result.message || 'Trader account created successfully!');
             document.getElementById('create-trader-form').reset();
             document.getElementById('create-trader-content').classList.add('hidden');
             document.getElementById('admin-profile-content').classList.remove('hidden');
-        });
+        } else {
+            alert(result.error || 'Something went wrong!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('There was a problem creating the trader account.');
+    });
+});
+
     </script>
 </body>
 </html>

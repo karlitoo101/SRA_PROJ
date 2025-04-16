@@ -124,7 +124,8 @@
             <thead>
                 <tr>
                     <th>Trader Name</th>
-                    <th>Joined Date</th>
+                    <th>Contact Number</th>
+                    <th>Telephone Number</th>
                     <th>Region</th>
                     <th>Actions</th>
                 </tr>
@@ -166,48 +167,56 @@
     <script>
         // Sample traders data
         const traders = [
-            { name: "Jane Cooper", joinedDate: "Mar 15, 2025", region: "Region V", joinedTimestamp: new Date("2025-03-15").getTime() },
+            { name: "Jane Cooper", contactNumber: "123-456-7890", telephoneNumber: "555-0101", region: "Region V" },
         ];
         
         // Function to render traders table
-        function renderTradersTable(sortOption = "alphabetical") {
-            const tableBody = document.getElementById("tradersTableBody");
-            tableBody.innerHTML = "";
-            
+function renderTradersTable(sortOption = "alphabetical") {
+    const tableBody = document.getElementById("tradersTableBody");
+    tableBody.innerHTML = ""; // Clear the table body
+
+    // Fetch traders from the backend
+    fetch('../../backend/admin/traderlist.php')
+        .then(response => response.json())
+        .then(traders => {
             // Sort traders based on option
             let sortedTraders = [...traders];
             if (sortOption === "alphabetical") {
-                sortedTraders.sort((a, b) => a.name.localeCompare(b.name));
+                sortedTraders.sort((a, b) => a.traderName.localeCompare(b.traderName));
             } else if (sortOption === "newest") {
-                sortedTraders.sort((a, b) => b.joinedTimestamp - a.joinedTimestamp);
+                // Implement sorting by newest first, if applicable
             }
-            
-            sortedTraders.forEach(trader => {
+
+            // Populate the table with trader data
+            sortedTraders.forEach(traders => {
                 const row = document.createElement("tr");
-                
+
                 row.innerHTML = `
-                    <td>${trader.name}</td>
-                    <td>${trader.joinedDate}</td>
-                    <td>${trader.region}</td>
+                    <td>${traders.traderName}</td>
+                    <td>${traders.contactNumber}</td>
+                    <td>${traders.telephoneNumber}</td>
+                    <td>${traders.region}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <button class="view-reports-btn" data-trader="${trader.name}" data-region="${trader.region}">
-                            View Reports
+                            <button class="view-reports-btn" data-trader="${traders.traderName}" data-region="${traders.region}">
+                                View Reports
                             </button>
-                            </button>
-                            <button class="message-btn" data-trader="${trader.name}" data-region="${trader.region}" data-joined="${trader.joinedDate}">
+                            <button class="message-btn" data-trader="${traders.traderName}" data-region="${traders.region}">
                                 <i class="fa-solid fa-comment"></i> Message
                             </button>
                         </div>
                     </td>
                 `;
-                
                 tableBody.appendChild(row);
             });
+        })
+        .catch(error => console.error('Error fetching traders:', error));
+}
             
             // Re-attach event listeners to new message buttons
             attachMessageButtonListeners();
-        }
+            attachViewReportsButtonListeners();
+        
         
         // Initial rendering
         renderTradersTable();
@@ -224,6 +233,21 @@
             }
         });
         
+        // Attach View Reports button listeners
+        function attachViewReportsButtonListeners() {
+            const viewReportsButtons = document.querySelectorAll(".view-reports-btn");
+            
+            viewReportsButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const traderName = this.getAttribute("data-trader");
+                    const region = this.getAttribute("data-region");
+                    
+                    // Navigate to reports page with trader info
+                    window.location.href = `trader-report-list.html?trader=${traderName}&region=${region}`;
+                });
+            });
+        }
+
         // Chat functionality
         const chatPanel = document.getElementById("chatPanel");
         const overlay = document.getElementById("overlay");
@@ -257,6 +281,7 @@
                     messageDiv.className = `message ${message.sender === "trader" ? "received" : "sent"}`;
                     
                     messageDiv.innerHTML = `
+
                         <div class="message-info">${message.sender === "trader" ? traderNameValue : "You"} • ${message.time}</div>
                         <div class="message-bubble">${message.text}</div>
                     `;
@@ -309,24 +334,6 @@
             }
         });
         
-        // Add this after attachMessageButtonListeners() function
-function attachViewReportsButtonListeners() {
-    const viewReportsButtons = document.querySelectorAll(".view-reports-btn");
-    
-    viewReportsButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const traderName = this.getAttribute("data-trader");
-            const region = this.getAttribute("data-region");
-            
-            // Navigate to reports page with trader info
-            window.location.href = `trader-report-list.html?trader=${traderName}&region=${region}`;
-        });
-    });
-}
-
-// Call this function after rendering the traders table
-attachViewReportsButtonListeners();
-
         function sendMessage() {
             const messageText = messageInput.value.trim();
             if (messageText === "") return;
