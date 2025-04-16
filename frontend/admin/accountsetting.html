@@ -557,16 +557,12 @@
                 </div>
                 <div class="profile-info">
                     <div class="info-group">
-                        <div class="label">Full Name</div>
+                        <div class="label">Name</div>
                         <div class="value">Admin Name</div>
                     </div>
                     <div class="info-group">
                         <div class="label">Email</div>
                         <div class="value">Admin@email.com</div>
-                    </div>
-                    <div class="info-group">
-                        <div class="label">Contact Number</div>
-                        <div class="value">(+63)</div>
                     </div>
                 </div>
                 <div class="buttons">
@@ -586,17 +582,12 @@
                 <form id="edit-profile-form">
                     <div class="create-trader-form">
                         <div class="form-group">
-                            <label for="fullName">Full Name</label>
+                            <label for="fullName">Name</label>
                             <input type="text" id="fullName" name="fullName" value="Admin">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" value="Admin@email.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactNumber">Contact Number</label>
-                            <input type="text" id="contactNumber" value="(+63)" maxlength="15" oninput="validatePhoneNumber(this)" required>
-                            <div class="field-note">Format: (+63) followed by 10 digits (11 digits total)</div>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -792,28 +783,6 @@
             document.getElementById('trader-password-requirements').style.display = 'block';
         });
 
-        // Validate phone number for admin profile with parentheses
-        function validatePhoneNumber(input) {
-            // Strip all non-digits except parentheses and +
-            let value = input.value.replace(/[^\d+()]/g, '');
-            
-            // Ensure it starts with (+63)
-            if (!value.startsWith('(+63)')) {
-                value = '(+63)';
-            }
-            
-            // Extract digits after (+63)
-            let digits = value.substring(5).replace(/\D/g, '');
-            
-            // Limit to 10 digits after (+63)
-            if (digits.length > 10) {
-                digits = digits.substring(0, 10);
-            }
-            
-            // Format as (+63) followed by digits
-            input.value = '(+63)' + digits;
-        }
-
         // Validate contact number for trader with parentheses
         function validateContactNumber(input) {
             // Strip all non-digits except parentheses and +
@@ -861,7 +830,7 @@
 
             return lengthMet && uppercaseMet && numberMet && specialMet;
         }
-
+        
         function updateRequirementUI(elementId, isMet) {
             const element = document.getElementById(elementId);
             if (isMet) {
