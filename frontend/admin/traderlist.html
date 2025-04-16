@@ -165,13 +165,8 @@
     </div>
     
     <script>
-        // Sample traders data
-        const traders = [
-            { name: "Jane Cooper", contactNumber: "123-456-7890", telephoneNumber: "555-0101", region: "Region V" },
-        ];
-        
         // Function to render traders table
-function renderTradersTable(sortOption = "alphabetical") {
+    function renderTradersTable(sortOption = "alphabetical") {
     const tableBody = document.getElementById("tradersTableBody");
     tableBody.innerHTML = ""; // Clear the table body
 
@@ -209,13 +204,14 @@ function renderTradersTable(sortOption = "alphabetical") {
                 `;
                 tableBody.appendChild(row);
             });
+            // Re-attach event listeners to new message buttons
+            attachMessageButtonListeners();
+            attachViewReportsButtonListeners();
         })
         .catch(error => console.error('Error fetching traders:', error));
 }
             
-            // Re-attach event listeners to new message buttons
-            attachMessageButtonListeners();
-            attachViewReportsButtonListeners();
+            
         
         
         // Initial rendering
