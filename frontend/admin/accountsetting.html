@@ -617,10 +617,10 @@
                             <div class="password-requirements" id="new-password-requirements" style="display: none;">
                                 Password requirements:
                                 <ul>
-                                    <li id="length-requirement"><i class="fa-solid fa-circle"></i> At least 8 characters</li>
-                                    <li id="uppercase-requirement"><i class="fa-solid fa-circle"></i> At least 1 uppercase letter</li>
-                                    <li id="number-requirement"><i class="fa-solid fa-circle"></i> At least 1 number</li>
-                                    <li id="special-requirement"><i class="fa-solid fa-circle"></i> At least 1 special character</li>
+                                    <li id="new-length-requirement"><i class="fa-solid fa-circle"></i> At least 8 characters</li>
+                                    <li id="new-uppercase-requirement"><i class="fa-solid fa-circle"></i> At least 1 uppercase letter</li>
+                                    <li id="new-number-requirement"><i class="fa-solid fa-circle"></i> At least 1 number</li>
+                                    <li id="new-special-requirement"><i class="fa-solid fa-circle"></i> At least 1 special character</li>
                                 </ul>
                             </div>
                         </div>
@@ -846,7 +846,7 @@
 
         // Listen for password input changes
         document.getElementById('newPassword').addEventListener('input', function() {
-            checkPasswordRequirements(this.value, 'length');
+            checkPasswordRequirements(this.value, 'new');
         });
 
         document.getElementById('password').addEventListener('input', function() {
