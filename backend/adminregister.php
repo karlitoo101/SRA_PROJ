@@ -1,11 +1,22 @@
 <?php
 // Include the database connection file
-include('config/db.php'); // Make sure the path is correct
+include('config/db.php'); // Ensure this path is correct
 
 // ======== GET AND SANITIZE POST DATA ========
-$name = trim($_POST['name']);
-$email = trim($_POST['email']);
-$raw_password = $_POST['password'];
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$raw_password = $_POST['password'] ?? '';
+
+// ======== VALIDATION ========
+if (empty($name) || empty($email) || empty($raw_password)) {
+    echo "Please fill in all required fields.";
+    exit;
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "Invalid email format.";
+    exit;
+}
 
 // ======== HASH PASSWORD USING BCRYPT ========
 $hashed_password = password_hash($raw_password, PASSWORD_BCRYPT);
