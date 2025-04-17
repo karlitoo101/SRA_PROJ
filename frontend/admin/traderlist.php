@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) {
+    header("Location: ../login.html"); // Redirect if not logged in
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,7 +106,7 @@
                 <span>Report</span>
             </div>
         </div>
-        
+        <div>Logged in as: <span><?php echo htmlspecialchars($_SESSION['name']); ?></span> </div>
         <div class="page-header">
             <div>
                 <h1 class="page-title">All Traders</h1>

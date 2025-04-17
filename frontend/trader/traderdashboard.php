@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) {
+    header("Location: ../login.html"); // Redirect if not logged in
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -423,6 +430,8 @@
     </header>
     
     <main>
+    <div class="trader-info">
+    Logged in as: <span><?php echo htmlspecialchars($_SESSION['name']); ?></span> </div>
         <div class="welcome-section">
             <div class="title-container">
                 <h1>Welcome to the</h1>
@@ -511,7 +520,7 @@
         const userConfirmed = confirm("Are you sure you want to log out?");
         
         if (userConfirmed) {
-            window.location.href = "../login.html";
+            window.location.href = "../logout.php";
             }
         });
 
