@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,7 +90,7 @@
             font-size: 14px;
         }
         
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
@@ -113,6 +114,32 @@
             background-color: #ffffff;
         }
         
+        /* Monthly Report Period Selection */
+        .report-period {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .period-selectors {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .period-label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .period-select {
+            flex: 1;
+            max-width: 200px;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
@@ -130,123 +157,6 @@
         th {
             background-color: #f2f2f2;
             vertical-align: middle;
-        }
-        
-        .month-cell {
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .year-row td {
-            padding: 5px;
-        }
-        
-        .year-input {
-            width: 60px;
-            padding: 3px;
-            border: 1px solid #888;
-            margin-left: 5px;
-        }
-
-        .year-label-cell {
-            text-align: left;
-            padding: 0 8px;
-            position: relative;
-        }
-
-        .year-cell-wrapper {
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-
-        .year-cell-wrapper label {
-            margin-right: 5px;
-            font-weight: normal;
-            font-size: 12px;
-            white-space: nowrap;
-         }
-
-        .year-input-visible {
-            width: 60px;
-            padding: 3px 5px;
-            border: 1px solid #ccc;
-            background-color: white;
-            border-radius: 4px;
-            font-size: 12px;
-         }
-
-         .year-visible-input {
-            position: static !important;
-            width: 80px !important;
-            height: auto !important;
-            padding: -5px !important;
-            border: 1px solid #999 !important;
-            border-radius: 4px !important;
-            background-color: #fff !important;
-            box-shadow: none !important;
-            text-align: left !important;
-        }
-
-        .year-visible-input:focus {
-            border: 1px solid #666;
-            outline: none;
-            box-shadow: 0 0 2px #999;
-        }
-        
-        .year-label-cell3 {
-            text-align: left;
-            padding: 0 8px;
-            position: relative;
-        }
-
-        .year-cell-wrapper3 label {
-            margin-right: 5px;
-            font-weight: normal;
-            font-size: 12px;
-            white-space: nowrap;
-         }
-        
-        .year-cell-wrapper3 {
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-
-        .year-visible-input3 {
-            position: static !important;
-            width: 80px !important;
-            height: auto !important;
-            padding: -5px !important;
-            border: 1px solid #999 !important;
-            border-radius: 4px !important;
-            background-color: #fff !important;
-            box-shadow: none !important;
-            text-align: left !important;
-        }
-
-
-        table input[type="text"] {
-            position: absolute;
-            background: transparent;
-            border: none;
-        }
-
-
-        
-        .note {
-            background-color: #ebebeb;
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            font-size: 12px;
-        }
-        
-        .note i {
-            margin-right: 5px;
-            font-size: 16px;
         }
         
         .purchases-header, .utilization-header {
@@ -283,6 +193,56 @@
             height: 30px;
         }
         
+        .note {
+            background-color: #ebebeb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .note i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+        
+        .month-display {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .btn i {
+            margin-right: 5px;
+        }
+        
+        .btn-draft {
+            background-color: #FFDD00;
+            color: black;
+        }
+        
+        .btn-submit {
+            background-color: #008000;
+            color: white;
+        }
+        
         @media (max-width: 768px) {
             .form-group {
                 flex: 100%;
@@ -296,12 +256,22 @@
             th, td {
                 padding: 4px 2px;
             }
+            
+            .period-selectors {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .period-select {
+                max-width: 100%;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <a href="traderdashboard.php" class="back-button">&#10094;</a>
+        <a href="traderdashboard.html" class="back-button">&#10094;</a>
         <div class="header-text">
             <h1>SRA Trader's Activity Report</h1>
             <h2>Sugar Regulatory Administration</h2>
@@ -368,178 +338,46 @@
             </div>
         </div>
         
-        <!-- First table section (September to February) -->
-        <div class="table-section">
-            <table>
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="col-cy">CY/MONTH</th>
-                        <th colspan="4" class="purchases-header">PURCHASES (VOLUME)</th>
-                        <th rowspan="2">Pls specify Sources & other information</th>
-                        <th colspan="5" class="utilization-header">UTILIZATION (VOLUME)</th>
-                        <th rowspan="2">Stock Balance</th>
-                    </tr>
-                    <tr>
-                        <th>IMPORTATION</th>
-                        <th>LOCAL MILLS</th>
-                        <th>LOCAL TRADERS</th>
-                        <th>AUCTION (BOC)</th>
-                        <th>OWN USED/ MANUFACTURING</th>
-                        <th>SALE TO DOMESTIC MARKET</th>
-                        <th>EXPORT TO US MARKET</th>
-                        <th>EXPORT TO WORLD MARKET</th>
-                        <th>Clients & other information</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <tr>
-                      <td class="year-label-cell">
-                        <div class="year-cell-wrapper">
-                          <label for="year-input"><strong>Year:</strong></label>
-                          <input type="text" id="year-visible-1" class="year-visible-input">
-                        </div>
-                      </td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                    </tr>
-                    
+        <!-- Monthly Report Period Selection -->
+        <div class="report-period">
+            <div class="period-selectors">
+                <span class="period-label">Reporting Period:</span>
+                <div class="period-select">
+                    <select id="reportMonth">
+                        <option value="">Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
                 
-                    <tr>
-                        <td class="month-cell">September</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">October</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">November</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">December</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                      <td class="year-label-cell3">
-                        <div class="year-cell-wrapper3">
-                          <label for="year-input"><strong>Year:</strong></label>
-                          <input type="text" id="year-visible-2" class="year-visible-input3">
-                        </div>
-                      </td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">January</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">February</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">TOTAL</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="note">
-              <i class="fa-solid fa-circle-info"></i> Note: Activity Reports from September to February should be submitted on or before March 15 of each CY.
+                <div class="period-select">
+                    <select id="reportYear">
+                        <option value="2020-2021">2020-2021</option>
+                        <option value="2021-2022">2021-2022</option>
+                        <option value="2022-2023">2022-2023</option>
+                        <option value="2023-2024">2023-2024</option>
+                        <option value="2024-2025" selected>2024-2025</option>
+                        <option value="2025-2026">2025-2026</option>
+                        <option value="2026-2027">2026-2027</option>
+                        <option value="2027-2028">2027-2028</option>
+                        <option value="2028-2029">2028-2029</option>
+                        <option value="2029-2030">2029-2030</option>
+                    </select>
+                </div>
             </div>
         </div>
         
-        <!-- Second table section (March to August) -->
+        <!-- Monthly Report Table Section -->
         <div class="table-section">
             <table>
                 <thead>
@@ -564,91 +402,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="month-cell">March</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">April</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">May</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">June</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">July</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">August</td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="month-cell">TOTAL</td>
+                        <td class="month-display" id="selectedMonth">April 2024-2025</td>
                         <td><input type="text"></td>
                         <td><input type="text"></td>
                         <td><input type="text"></td>
@@ -665,10 +419,8 @@
             </table>
             
             <div class="note">
-              <i class="fa-solid fa-circle-info"></i> Note: Activity Reports from March to August should be submitted on or before September 15 of each CY.
+              <i class="fa-solid fa-circle-info"></i> Submit Activity Reports by March 15 (for Sept–Feb) and by September 15 (for Mar–Aug) each CY.
             </div>
-
-           
 
             <div class="form-row" style="margin-top: 20px;">
               <div class="form-group" style="flex: 1;">
@@ -697,17 +449,45 @@
               </div>
             
               <div style="display: flex; gap: 10px;">
-                <button type="button" style="padding: 8px 15px; background-color: #FFDD00; color: black; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center;">
-                  <i class="fa-regular fa-floppy-disk" style="margin-right: 5px;"></i> Save as Draft
+                <button type="button" class="btn btn-draft">
+                  <i class="fa-regular fa-floppy-disk"></i> Save as Draft
                 </button>
             
-                <button type="button" style="padding: 8px 15px; background-color: #008000; color: white; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center;">
-                  <i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i> Submit
+                <button type="button" class="btn btn-submit">
+                  <i class="fa-solid fa-paper-plane"></i> Submit
                 </button>
               </div>
             </div>
-            
         </div>
     </div>
+
+    <script>
+        // Simple script to update the displayed month when selections change
+        document.getElementById('reportMonth').addEventListener('change', updateDisplayedMonth);
+        document.getElementById('reportYear').addEventListener('change', updateDisplayedMonth);
+
+        function updateDisplayedMonth() {
+            const monthSelect = document.getElementById('reportMonth');
+            const yearSelect = document.getElementById('reportYear');
+            const monthDisplay = document.getElementById('selectedMonth');
+            
+            if(monthSelect.value && yearSelect.value) {
+                const monthNames = [
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                
+                const selectedMonth = monthNames[parseInt(monthSelect.value) - 1];
+                monthDisplay.textContent = `${selectedMonth} ${yearSelect.value}`;
+            } else {
+                monthDisplay.textContent = "Select Month and Year";
+            }
+        }
+        
+        // Initialize with default values if present
+        window.onload = function() {
+            updateDisplayedMonth();
+        }
+    </script>
 </body>
 </html>
