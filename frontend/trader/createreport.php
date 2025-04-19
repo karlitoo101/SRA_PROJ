@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID'])) {
-    header("Location: ../../logins/login.html"); // Redirect if not logged in
+if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 0) {
+    // Redirect to login page if not an admin
+    header("Location: ../../logins/logout.php"); // Change the path as needed
     exit();
 }
 ?>

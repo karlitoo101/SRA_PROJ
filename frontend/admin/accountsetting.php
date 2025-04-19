@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID'])) {
-    header("Location: ../../logins/login.html"); // Redirect if not logged in
+if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // Redirect to login page if not an admin
+    header("Location: ../../logins/logout.php"); // Change the path as needed
     exit();
 }
 ?>
@@ -463,6 +464,12 @@ if (!isset($_SESSION['userID'])) {
             font-size: 14px;
             color: #888;
         }
+        .user-info .email {
+            font-size: 13px;
+            font-weight: 400; /* slightly lighter than default */
+            color: #777;       /* softer color for subtle appearance */
+            margin-top: 2px;
+        }
 
         @media (max-width: 768px) {
             .create-trader-form {
@@ -538,17 +545,19 @@ if (!isset($_SESSION['userID'])) {
         </div>
         
         <div class="user-profile">
-            <div class="avatar">
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="user-info">
-                <div class="name">Admin Name</div>
-                <div class="role">Administrator</div>
-            </div>
-            <div class="logout" id="logoutBtn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </div>
-        </div>
+    <div class="avatar">
+        <i class="fa-solid fa-user"></i>
+    </div>
+    <div class="user-info">
+        <div class="name"><?php echo htmlspecialchars($_SESSION['name']); ?></div>
+        <div class="email"><?php echo htmlspecialchars($_SESSION['email']); ?></div>
+        <div class="role">Administrator</div>
+    </div>
+    <div class="logout" id="logoutBtn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+    </div>
+</div>
+
     </div>
 
     <div class="main-content">
@@ -560,12 +569,12 @@ if (!isset($_SESSION['userID'])) {
                     <div class="profile-avatar">
                         <i class="fa-solid fa-user"></i>
                     </div>
-                    <h3 class="profile-name">Admin</h3>
+                    <h3 class="profile-name"><?php echo htmlspecialchars($_SESSION['name']); ?></h3>
                 </div>
                 <div class="profile-info">
                     <div class="info-group">
                         <div class="label">Email</div>
-                        <div class="value">Admin@email.com</div>
+                        <div class="value"><?php echo htmlspecialchars($_SESSION['email']); ?></div>
                     </div>
                 </div>
                 <div class="buttons">
@@ -586,7 +595,7 @@ if (!isset($_SESSION['userID'])) {
                     <div class="create-trader-form">
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" value="Admin@email.com">
+                            <input type="email" id="email" name="email">
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -815,7 +824,6 @@ if (!isset($_SESSION['userID'])) {
             }
         }
 
-        // Check password requirements
         function checkPasswordRequirements(password, prefix) {
             const lengthMet = password.length >= 8;
             const uppercaseMet = /[A-Z]/.test(password);
@@ -855,33 +863,74 @@ if (!isset($_SESSION['userID'])) {
         // Form submission handlers
         document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Here you would normally send the data to your backend
-            alert('Profile updated successfully!');
-            document.getElementById('edit-profile-content').classList.add('hidden');
-            document.getElementById('admin-profile-content').classList.remove('hidden');
+    
+            const email = document.getElementById('email').value.trim();
+
+            fetch('../../backend/admin/changeadminemail.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `email=${encodeURIComponent(email)}`
+            })
+            .then(res => res.text())
+            .then(data => {
+                alert(data);
+                document.getElementById('edit-profile-content').classList.add('hidden');
+                document.getElementById('admin-profile-content').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while updating the profile.");
+            });
         });
 
+
         document.getElementById('change-password-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
+             e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
             // Check if passwords match
             if (newPassword !== confirmPassword) {
                 alert('Passwords do not match!');
                 return;
             }
-            
+
             // Check password requirements
-            if (!checkPasswordRequirements(newPassword, 'length')) {
+            if (!checkPasswordRequirements(newPassword, 'new')) {
                 alert('Password does not meet all requirements!');
                 return;
             }
-            
-            // Here you would normally send the data to your backend
-            alert('Password changed successfully!');
-            document.getElementById('change-password-content').classList.add('hidden');
-            document.getElementById('admin-profile-content').classList.remove('hidden');
+
+            const formData = new URLSearchParams();
+            formData.append('currentPassword', currentPassword);
+            formData.append('newPassword', newPassword);
+            formData.append('confirmPassword', confirmPassword);
+
+            fetch('../../backend/admin/changeadminpassword.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            })
+            .then(res => res.text())
+            .then(response => {
+                if (response === "success") {
+                    alert('Password changed successfully!');
+                    document.getElementById('change-password-content').classList.add('hidden');
+                    document.getElementById('admin-profile-content').classList.remove('hidden');
+                } else {
+                    alert(response); // Show error message from backend
+                }
+            })
+            .catch(err => {
+                console.error("Error updating password:", err);
+                alert("An error occurred while changing the password.");
+            });
         });
 
         document.getElementById('create-trader-form').addEventListener('submit', function(e) {

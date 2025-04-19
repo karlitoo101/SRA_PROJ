@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID'])) {
-    header("Location: ../../logins/login.html"); // Redirect if not logged in
+if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // Redirect to login page if not an admin
+    header("Location: ../../logins/logout.php"); // Change the path as needed
     exit();
 }
 ?>
@@ -334,6 +335,13 @@ if (!isset($_SESSION['userID'])) {
             font-size: 14px;
             margin-top: 8px;
         }
+        .user-info .email {
+            font-size: 13px;
+            font-weight: 400; /* slightly lighter than default */
+            color: #777;       /* softer color for subtle appearance */
+            margin-top: 2px;
+        }
+
     </style>
 </head>
 <body>
@@ -390,7 +398,8 @@ if (!isset($_SESSION['userID'])) {
                 <i class="fa-solid fa-user"></i>
             </div>
             <div class="user-info">
-                <div class="name">Admin Name</div>
+                <div class="name"><?php echo htmlspecialchars($_SESSION['name']); ?></div>
+                <div class="email"><?php echo htmlspecialchars($_SESSION['email']); ?></div>
                 <div class="role">Administrator</div>
             </div>
             <div class="logout" id="logoutBtn">

@@ -1,7 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID'])) {
-    header("Location: ../../logins/login.html"); // Redirect if not logged in
+if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // Redirect to login page if not an admin
+    header("Location: ../../logins/logout.php"); // Change the path as needed
     exit();
 }
 ?>
@@ -69,7 +70,8 @@ if (!isset($_SESSION['userID'])) {
                 <i class="fa-solid fa-user"></i>
             </div>
             <div class="user-info">
-                <div class="name">Admin Name</div>
+                <div class="name"><?php echo htmlspecialchars($_SESSION['name']); ?></div>
+                <div class="email"><?php echo htmlspecialchars($_SESSION['email']); ?></div>
                 <div class="role">Administrator</div>
             </div>
             <div class="logout" id="logoutBtn">
@@ -106,7 +108,6 @@ if (!isset($_SESSION['userID'])) {
                 <span>Report</span>
             </div>
         </div>
-        <div>Logged in as: <span><?php echo htmlspecialchars($_SESSION['name']); ?></span> </div>
         <div class="page-header">
             <div>
                 <h1 class="page-title">All Traders</h1>
@@ -123,8 +124,7 @@ if (!isset($_SESSION['userID'])) {
         <div class="sort-controls">
             <label for="sortSelect">Sort by:</label>
             <select id="sortSelect">
-                <option value="alphabetical">Region (A-Z)</option>
-                <option value="newest">Newest First</option>
+                <option value="alphabetical">Trader name (A-Z)</option>
             </select>
         </div>
         
@@ -173,58 +173,70 @@ if (!isset($_SESSION['userID'])) {
     </div>
     
     <script>
-        // Function to render traders table
-    function renderTradersTable(sortOption = "alphabetical") {
-    const tableBody = document.getElementById("tradersTableBody");
-    tableBody.innerHTML = ""; // Clear the table body
+    let allTraders = [];
+let sortOption = "alphabetical"; // Default sort
+const searchInput = document.querySelector('.search-input');
+const tableBody = document.getElementById("tradersTableBody");
 
-    // Fetch traders from the backend
-    fetch('../../backend/admin/traderlist.php')
-        .then(response => response.json())
-        .then(traders => {
-            // Sort traders based on option
-            let sortedTraders = [...traders];
-            if (sortOption === "alphabetical") {
-                sortedTraders.sort((a, b) => a.traderName.localeCompare(b.traderName));
-            } else if (sortOption === "newest") {
-                // Implement sorting by newest first, if applicable
-            }
+// Fetch traders from the backend
+fetch('../../backend/admin/displaytraders.php')
+    .then(response => response.json())
+    .then(traders => {
+        allTraders = traders;
+        renderTradersTable(); // Initial render
+    })
+    .catch(error => console.error('Error fetching traders:', error));
 
-            // Populate the table with trader data
-            sortedTraders.forEach(traders => {
-                const row = document.createElement("tr");
+// Render table with search and sorting
+function renderTradersTable() {
+    const searchTerm = searchInput.value.toLowerCase();
 
-                row.innerHTML = `
-                    <td>${traders.traderName}</td>
-                    <td>${traders.contactNumber}</td>
-                    <td>${traders.telephoneNumber}</td>
-                    <td>${traders.region}</td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <button class="view-reports-btn" data-trader="${traders.traderName}" data-region="${traders.region}">
-                                View Reports
-                            </button>
-                            <button class="message-btn" data-trader="${traders.traderName}" data-region="${traders.region}">
-                                <i class="fa-solid fa-comment"></i> Message
-                            </button>
-                        </div>
-                    </td>
-                `;
+    // Filter based on search input
+    let filteredTraders = allTraders.filter(trader =>
+        trader.traderName.toLowerCase().includes(searchTerm) ||
+        trader.contactNumber.toLowerCase().includes(searchTerm) ||
+        trader.telephoneNumber.toLowerCase().includes(searchTerm) ||
+        trader.region.toLowerCase().includes(searchTerm)
+    );
+
+    // Apply sorting
+    if (sortOption === "alphabetical") {
+        filteredTraders.sort((a, b) => a.traderName.localeCompare(b.traderName));
+    } else if (sortOption === "newest") {
+
+    }
+
+    // Clear and populate table
+    tableBody.innerHTML = "";
+    filteredTraders.forEach(trader => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${trader.traderName}</td>
+            <td>${trader.contactNumber}</td>
+            <td>${trader.telephoneNumber}</td>
+            <td>${trader.region}</td>
+            <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button class="view-reports-btn" data-trader="${trader.traderName}" data-region="${trader.region}">
+                        View Reports
+                    </button>
+                    <button class="message-btn" data-trader="${trader.traderName}" data-region="${trader.region}">
+                        <i class="fa-solid fa-comment"></i> Message
+                    </button>
+                </div>
+            </td>
+        `;
                 tableBody.appendChild(row);
             });
-            // Re-attach event listeners to new message buttons
+
+            // Re-attach event listeners
             attachMessageButtonListeners();
             attachViewReportsButtonListeners();
-        })
-        .catch(error => console.error('Error fetching traders:', error));
-}
-            
-            
-        
-        
-        // Initial rendering
-        renderTradersTable();
-        
+        }
+
+        // Search listener
+        searchInput.addEventListener('input', renderTradersTable);
+  
         // Sort dropdown change event
         document.getElementById("sortSelect").addEventListener("change", function() {
             renderTradersTable(this.value);
@@ -247,7 +259,7 @@ if (!isset($_SESSION['userID'])) {
                     const region = this.getAttribute("data-region");
                     
                     // Navigate to reports page with trader info
-                    window.location.href = `trader-report-list.html?trader=${traderName}&region=${region}`;
+                    window.location.href = `trader-report-list.php?trader=${traderName}&region=${region}`;
                 });
             });
         }
@@ -265,7 +277,7 @@ if (!isset($_SESSION['userID'])) {
         
         // Sample messages for Jane Cooper
         const sampleMessages = {
-    "Jane Cooper": [  
+            "Jane Cooper": [  
          ]
         };
 
