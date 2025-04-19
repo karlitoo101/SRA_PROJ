@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('config/db.php'); // database connection
+include('../backend/dbconnection/db.php'); // database connection
 
 // Check if POST data is set
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

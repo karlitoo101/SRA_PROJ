@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sugar Regulatory Administration - Register</title>
+    <title>Sugar Regulatory Administration - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -12,7 +12,7 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-
+        
         body {
             background-image: url('../resources/bglogin.png');
             background-size: cover;
@@ -24,18 +24,18 @@
             justify-content: start;
             padding: 20px;
         }
-
-        .register-container {
+        
+        .login-container {
             width: 100%;
             max-width: 400px;
             text-align: center;
             margin-top: 5px;
         }
-
+        
         .logo {
             margin-bottom: 10px;
         }
-
+        
         .logo img {
             width: 160px;
             height: auto;
@@ -57,17 +57,17 @@
             white-space: nowrap;
             line-height: 1.2;
         }
-
-        .register-form {
+        
+        .login-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-
+        
         .form-group {
             position: relative;
         }
-
+        
         .form-control {
             width: 100%;
             padding: 15px 15px 15px 50px;
@@ -76,7 +76,7 @@
             background-color: rgba(240, 240, 255, 0.8);
             font-size: 16px;
         }
-
+        
         .icon {
             position: absolute;
             left: 20px;
@@ -84,8 +84,19 @@
             transform: translateY(-50%);
             color: #555;
         }
-
-        .register-btn {
+        
+        .forgot-password {
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .forgot-password a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .login-btn {
             background-color: #008000;
             color: white;
             border: none;
@@ -96,121 +107,119 @@
             margin-top: 15px;
             transition: background-color 0.3s;
         }
-
-        .register-btn:hover {
+        
+        .login-btn:hover {
             background-color: #006400;
         }
 
         .toggle-password {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #555;
-            font-size: 18px;
+           position: absolute;
+           right: 20px;
+           top: 50%;
+           transform: translateY(-50%);
+           cursor: pointer;
+           color: #555;
+           font-size: 18px;
         }
+
     </style>
 </head>
 <body>
-    <div class="register-container">
+    <div class="login-container">
         <div class="logo">
             <img src="../resources/SRA_thumbnail.png" alt="Department of Agriculture Logo">
         </div>
-
+        
         <div class="TitleText">
             <h1>SUGAR REGULATORY ADMINISTRATION</h1>
         </div>
-
-        <h2 style="margin-bottom: 30px;">CREATE ADMIN ACCOUNT</h2>
-
-        <!-- Actual form starts -->
-        <form class="register-form" id="registerForm">
-            <!-- Name input to be submitted -->
-            <div class="form-group">
-                <i class="fa-solid fa-user icon"></i>
-                <input type="text" class="form-control" id="nameInput" placeholder="Name" required>
-            </div>
-
+        
+        <h2 style="margin-bottom: 30px;">LOG IN</h2>
+        
+        <form class="login-form" id="loginForm">
             <div class="form-group">
                 <i class="fa-regular fa-envelope icon"></i>
                 <input type="email" class="form-control" id="emailInput" placeholder="Email" required>
             </div>
-
+            
             <div class="form-group">
                 <i class="fa-solid fa-lock icon"></i>
-                <input type="password" class="form-control" id="passwordInput" placeholder="Password" required>
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
                 <i class="fa-regular fa-eye toggle-password" id="togglePassword"></i>
+                
             </div>
-
-            <div class="form-group">
-                <i class="fa-solid fa-lock icon"></i>
-                <input type="password" class="form-control" id="confirmPasswordInput" placeholder="Confirm Password" required>
-                <i class="fa-regular fa-eye toggle-password" id="toggleConfirmPassword"></i>
+            
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot password</a>
             </div>
-
-            <button type="submit" class="register-btn">REGISTER</button>
+            
+            <button type="submit" class="login-btn">LOG IN</button>
         </form>
     </div>
-
+      
     <script>
-        const nameInput = document.getElementById('nameInput');
-        const passwordInput = document.getElementById('passwordInput');
-        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+        const passwordInput = document.getElementById('password');
         const togglePassword = document.getElementById('togglePassword');
-        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
         const emailInput = document.getElementById('emailInput');
-        const registerForm = document.getElementById('registerForm');
-
-        // Toggle password visibility
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const loginForm = document.getElementById('loginForm');
+    
         togglePassword.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             togglePassword.classList.toggle('fa-eye');
             togglePassword.classList.toggle('fa-eye-slash');
         });
-
-        toggleConfirmPassword.addEventListener('click', () => {
-            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            confirmPasswordInput.setAttribute('type', type);
-            toggleConfirmPassword.classList.toggle('fa-eye');
-            toggleConfirmPassword.classList.toggle('fa-eye-slash');
-        });
-
-        // Handle form submit
-        registerForm.addEventListener('submit', (e) => {
+        
+        // Handle forgot password link click
+        forgotPasswordLink.addEventListener('click', (e) => {
             e.preventDefault();
-
-            const name = nameInput.value.trim();
+            
+            // Get the email value
             const email = emailInput.value.trim();
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
+            
+            if (email === '') {
+                alert('Please enter your email address first');
+                emailInput.focus();
                 return;
             }
-
-            fetch('../backend/adminregister.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                if (data === "Admin account created successfully!") {
-                    registerForm.reset();
-                }
-                
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred during registration.');
-            });
+            
+            // Store email in localStorage to access it from the verification page
+            localStorage.setItem('resetEmail', email);
+            
+            // Redirect to verification page - using your specific filename
+            window.location.href = 'forgotpass.html';
         });
+        
+        loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    fetch('loginprocess.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    })
+    .then(res => res.text())
+    .then(data => {
+        if (data === "admin") {
+            window.location.href = "../frontend/admin/traderlist.php";
+        } else if (data === "user") {
+            window.location.href = "../frontend/trader/traderdashboard.php";
+        } else {
+            alert(data); // Show error
+        }
+    })
+    .catch(err => {
+        console.error("Login error:", err);
+        alert("An error occurred during login.");
+    });
+});
+
     </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['userID'])) {
-    header("Location: ../login.html"); // Redirect if not logged in
+    header("Location: ../../logins/login.html"); // Redirect if not logged in
     exit();
 }
 ?>
@@ -35,7 +35,7 @@ if (!isset($_SESSION['userID'])) {
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </a>
-            <a href="supplydemand.html" class="nav-item" id="supplyDemandNav">
+            <a href="supplydemand.php" class="nav-item" id="supplyDemandNav">
                 <div class="nav-item-content">
                     <div class="nav-icon1">
                         <i class="fa-solid fa-square-poll-vertical"></i>
@@ -51,7 +51,7 @@ if (!isset($_SESSION['userID'])) {
         
         <div class="nav-section">
             <div class="nav-group">PREFERENCES</div>
-            <a href="accountsetting.html" class="nav-item" id="accountSettingsNav">
+            <a href="accountsetting.php" class="nav-item" id="accountSettingsNav">
                 <div class="nav-item-content">
                     <div class="nav-icon">
                         <i class="fa-solid fa-gear"></i>
@@ -233,7 +233,7 @@ if (!isset($_SESSION['userID'])) {
         document.getElementById("logoutBtn").addEventListener("click", function() {
             const confirmLogout = confirm("Are you sure you want to log out?");
             if (confirmLogout) {
-                window.location.href = "../logout.php";
+                window.location.href = "../../logins/logout.php";
             }
         });
         

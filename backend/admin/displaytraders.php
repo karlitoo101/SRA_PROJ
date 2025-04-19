@@ -1,6 +1,6 @@
 <?php
 // getTraders.php
-require_once '../config/db.php';
+require_once '../dbconnection/db.php';
 
 // Fetch all traders from the database
 $sql = "SELECT traderName, contactNumber, telephoneNumber, region FROM traders";

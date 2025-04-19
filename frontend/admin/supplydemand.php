@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) {
+    header("Location: ../../logins/login.html"); // Redirect if not logged in
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -443,7 +450,7 @@
         <div class="nav-section">
             <div class="nav-group">DASHBOARD</div>
             
-            <a href="traderlist.html" class="nav-item">
+            <a href="traderlist.php" class="nav-item">
                 <div class="nav-item-content">
                     <div class="nav-icon">
                         <i class="fa-solid fa-users"></i>
@@ -471,7 +478,7 @@
         
         <div class="nav-section">
             <div class="nav-group">PREFERENCES</div>
-            <a href="accountsetting.html" class="nav-item">
+            <a href="accountsetting.php" class="nav-item">
                 <div class="nav-item-content">
                     <div class="nav-icon">
                         <i class="fa-solid fa-gear"></i>
@@ -703,7 +710,7 @@
         document.getElementById("logoutBtn").addEventListener("click", function() {
                   const confirmLogout = confirm("Are you sure you want to log out?");
                   if (confirmLogout) {
-                    window.location.href = "../login.html";
+                    window.location.href = "../../logins/logout.php";
                   }
                 });
     </script>

@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) {
+    header("Location: ../../logins/login.html"); // Redirect if not logged in
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -266,7 +273,7 @@
             const userConfirmed = confirm("Are you sure you want to log out?");
             
             if (userConfirmed) {
-                window.location.href = "../login.html";
+                window.location.href = "../../logins/logout.php";
             }
         });
         

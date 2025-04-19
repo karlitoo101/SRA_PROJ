@@ -1,4 +1,10 @@
-
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) {
+    header("Location: ../../logins/login.html"); // Redirect if not logged in
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -271,7 +277,7 @@
 </head>
 <body>
     <div class="header">
-        <a href="traderdashboard.html" class="back-button">&#10094;</a>
+        <a href="traderdashboard.php" class="back-button">&#10094;</a>
         <div class="header-text">
             <h1>SRA Trader's Activity Report</h1>
             <h2>Sugar Regulatory Administration</h2>

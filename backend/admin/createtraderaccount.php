@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once '../config/db.php'; // ✅ your PDO connection file
+require_once '../dbconnection/db.php'; // ✅ your PDO connection file
 
 try {
     // Get POST data

@@ -11,17 +11,17 @@
 session_start();
 
 // Check if user is logged in
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['userID'])) {
     // Redirect to dashboard based on role
     if ($_SESSION['role'] === 'admin') {
-        header('Location: frontend/admindashboard.html');
+        header('Location: frontend/admin/traderlist.php');
     } else {
-        header('Location: frontend/traderdashboard.html');
+        header('Location: frontend/trader/traderdashboard.html');
     }
     exit;
 } else {
     // If not logged in, go to login page
-    header('Location: frontend/login.html ');
+    header('Location: logins/login.html ');
     exit;
 }
 ?>

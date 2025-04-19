@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['userID'])) {
-    header("Location: ../login.html"); // Redirect if not logged in
+    header("Location: ../../logins/login.html"); // Redirect if not logged in
     exit();
 }
 ?>
@@ -424,7 +424,7 @@ if (!isset($_SESSION['userID'])) {
         <img src="../../resources/REPUBLICOFPH.png" alt="SRA Logo" class="logo secondLogo">
         <nav>
             <a href="#" class="active">HOME</a>
-            <a href="reportdraft.html">DRAFTS</a>
+            <a href="reportdraft.php">DRAFTS</a>
             <button class="sign-out-btn">Sign out</button>
         </nav>
     </header>
@@ -438,7 +438,7 @@ if (!isset($_SESSION['userID'])) {
                 <span class="green-highlight">Sugar Regulatory Administration</span>
             </div>  
             <p>Monitoring System: Efficiently track and manage trader reports with real-time data and compliance updates.</p>    
-            <button class="create-report-btn" onclick="window.location.href='createreport.html'">Create report</button>
+            <button class="create-report-btn" onclick="window.location.href='createreport.php'">Create report</button>
         </div>
         
         <div class="features">
@@ -520,7 +520,7 @@ if (!isset($_SESSION['userID'])) {
         const userConfirmed = confirm("Are you sure you want to log out?");
         
         if (userConfirmed) {
-            window.location.href = "../logout.php";
+            window.location.href = "../../logins/logout.php";
             }
         });
 

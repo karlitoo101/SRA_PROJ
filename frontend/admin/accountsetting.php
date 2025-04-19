@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) {
+    header("Location: ../../logins/login.html"); // Redirect if not logged in
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -490,7 +497,7 @@
         <div class="nav-section">
             <div class="nav-group">DASHBOARD</div>
             
-            <a href="traderlist.html" class="nav-item" id="tradersNav">
+            <a href="traderlist.php" class="nav-item" id="tradersNav">
                 <div class="nav-item-content">
                     <div class="nav-icon">
                         <i class="fa-solid fa-users"></i>
@@ -501,7 +508,7 @@
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </a>
-            <a href="supplydemand.html" class="nav-item" id="supplyDemandNav">
+            <a href="supplydemand.php" class="nav-item" id="supplyDemandNav">
                 <div class="nav-item-content">
                     <div class="nav-icon1">
                         <i class="fa-solid fa-square-poll-vertical"></i>
@@ -557,10 +564,6 @@
                 </div>
                 <div class="profile-info">
                     <div class="info-group">
-                        <div class="label">Name</div>
-                        <div class="value">Admin Name</div>
-                    </div>
-                    <div class="info-group">
                         <div class="label">Email</div>
                         <div class="value">Admin@email.com</div>
                     </div>
@@ -581,10 +584,6 @@
                 <h2>Edit Profile</h2>
                 <form id="edit-profile-form">
                     <div class="create-trader-form">
-                        <div class="form-group">
-                            <label for="fullName">Name</label>
-                            <input type="text" id="fullName" name="fullName" value="Admin">
-                        </div>
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" value="Admin@email.com">
@@ -906,7 +905,7 @@
             // Collect form data
             const formData = new FormData(this);
 
-        fetch('../../backend/admin/accountsettings.php', {
+        fetch('../../backend/admin/createtraderaccount.php', {
         method: 'POST',
         body: formData
         })
@@ -929,7 +928,7 @@
     document.getElementById("logoutBtn").addEventListener("click", function() {
             const confirmLogout = confirm("Are you sure you want to log out?");
             if (confirmLogout) {
-                window.location.href = "../login.html";
+                window.location.href = "../../logins/logout.php";
             }
         });
 

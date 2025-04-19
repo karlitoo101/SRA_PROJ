@@ -1,6 +1,6 @@
 <?php
 // Include the database connection file
-include('config/db.php'); // Ensure this path is correct
+include('../backend/dbconnection/db.php'); // Ensure this path is correct
 
 // ======== GET AND SANITIZE POST DATA ========
 $name = trim($_POST['name'] ?? '');
