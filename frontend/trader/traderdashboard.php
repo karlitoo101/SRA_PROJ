@@ -4,6 +4,12 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
     // Redirect to login page if not an admin
     header("Location: ../../logins/logout.php"); // Change the path as needed
     exit();
+
+
+
+
+
+
 }
 ?>
 <!DOCTYPE html>
@@ -505,14 +511,19 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 Hello! How can I help you with the Sugar Regulatory Administration system today?
             </div>
         </div>
-        <div class="chat-input">
-            <input type="text" placeholder="Type a message">
-            <button class="send-btn">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
+        <div class="chat-box-body" id="chat-box-body">
+            <!-- Chat messages will be loaded here -->
         </div>
+        <form class="chat-input" id="chat-form">
+            <input type="hidden" id="sender" value="<?php echo $username; ?>">
+            <input type="hidden" id="receiver" value="<?php echo $selectedUser; ?>">
+            <input type="text" id="message" placeholder="Type your message..." required>
+            <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
     </div>
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
 
         //for log out notif
