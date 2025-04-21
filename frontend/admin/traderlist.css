@@ -379,6 +379,7 @@ body {
     margin-bottom: 10px;
     max-width: 80%;
     word-wrap: break-word;
+    color: #00843d;
 }
 
 .message p {
@@ -386,16 +387,15 @@ body {
 }
 
 .chat-input {
-    padding: 16px;
-    border-top: 1px solid #f1f5f9;
     display: flex;
-    align-items: center;
+    border-top: 1px solid #e0e0e0;
+    padding: 15px;
 }
 
 .chat-input input {
     flex: 1;
     border: 1px solid #ddd;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 8px 15px;
     outline: none;
 }
