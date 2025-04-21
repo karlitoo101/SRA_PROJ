@@ -102,15 +102,11 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
         </div>
         <div class="chat-box-body" id="chat-box-body">
             <!-- Chat messages will be loaded here -->
-            <div class="message-container">
-                <div class="message-loading">
-                    Loading messages...
-                </div>
-            </div>
+            
         </div>
         <form class="chat-input" id="chat-form">
-            <input type="hidden" id="sender" value="<?php echo htmlspecialchars($_SESSION['userID']); ?>">
-            <input type="hidden" id="receiver" value="SRA">
+            <input type="hidden" id="sender" value="<?php echo htmlspecialchars($_SESSION['name']); ?>">
+            <input type="hidden" id="receiver" value="<?php echo htmlspecialchars($_SESSION['receiverName']); ?>">
             <input type="text" id="message" placeholder="Type your message..." required>
             <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
         </form>
@@ -188,75 +184,57 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 }
             });
 
+            
+
+
             // Function to fetch messages
             function fetchMessages() {
+                var sender = $('#sender').val();
+                var receiver = $('#receiver').val();
+
                 $.ajax({
-                    url: '../../backend/fetch_message.php',
+                    url: '../../backend/messages/fetch_message.php',
                     type: 'POST',
-                    data: {
-                        sender: $('#sender').val(),
-                        receiver: $('#receiver').val() // This now always points to admin
-                    },
+                    data: { sender: sender, receiver: receiver },
                     success: function (data) {
-                        $('#chat-box-body .message-container').html(data);
+                        $('#chat-box-body').html(data);
                         scrollChatToBottom();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error fetching messages:", error);
-                        $('#chat-box-body .message-container').html(
-                            '<div class="message-error">Error loading messages. Please try again.</div>'
-                        );
                     }
                 });
             }
 
-            // Function to scroll chat to bottom
+
+            // Function to scroll the chat box to the bottom
             function scrollChatToBottom() {
-                const chatBody = document.getElementById('chat-box-body');
-                chatBody.scrollTop = chatBody.scrollHeight;
+                var chatBox = $('#chat-box-body');
+                chatBox.scrollTop(chatBox.prop("scrollHeight"));
             }
 
-            // Submit the chat message
-            $('#chat-form').on('submit', function (e) {
-                e.preventDefault();
-                const message = $('#message').val().trim();
+            $(document).ready(function () {
+                // Fetch messages every 3 seconds
 
-                if (message === '') return;
+                fetchMessages();
+                setInterval(fetchMessages, 3000);
+            });
+
+
+            // Submit the chat message
+            $('#chat-form').submit(function (e) {
+                e.preventDefault();
+                var sender = $('#sender').val();
+                var receiver = $('#receiver').val();
+                var message = $('#message').val();
 
                 $.ajax({
                     url: '../../backend/messages/submit_message.php',
                     type: 'POST',
-                    data: {
-                        sender: $('#sender').val(),
-                        receiver: $('#receiver').val(),
-                        message: message
-                    },
+                    data: { sender: sender, receiver: receiver, message: message },
                     success: function () {
                         $('#message').val('');
-                        fetchMessages();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error sending message:", error);
-                        alert('Failed to send message. Please try again.');
+                        fetchMessages(); // Fetch messages after submitting
                     }
                 });
-            });
 
-            // Initial fetch and set interval for refreshing messages
-            fetchMessages();
-            setInterval(fetchMessages, 3000);
-
-            // Auto-focus message input when chat opens
-            $(document).on('click', '#message', function () {
-                $(this).focus();
-            });
-
-            // Allow pressing Enter to send message
-            $(document).on('keypress', '#message', function (e) {
-                if (e.which === 13) {
-                    $('#chat-form').submit();
-                    return false;
-                }
             });
         });
     </script>

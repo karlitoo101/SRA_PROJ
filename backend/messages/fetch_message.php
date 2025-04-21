@@ -1,25 +1,34 @@
 <?php
 session_start();
-require_once('../dbconnection/db.php');
-
-if (!isset($_SESSION['email'])) {
-    exit("You are not logged in");
-}
+require_once '../dbconnection/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $sender = $_POST['sender'] ?? '';
+    $receiver = $_POST['receiver'] ?? '';
 
-    $sender = $_POST['sender'];
-    $receiver = $_POST['receiver'];
+    if ($sender && $receiver) {
+        $sql = "SELECT * FROM chat_messages 
+                WHERE (sender = :sender AND receiver = :receiver) 
+                   OR (sender = :receiver AND receiver = :sender) 
+                ORDER BY created_at";
 
-    $sql = "SELECT * FROM chat_messages WHERE (sender='$sender' AND receiver='$receiver') OR (sender='$receiver' AND receiver='$sender') ORDER BY created_at";
-    $result = $conn->query($sql);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':sender' => $sender,
+            ':receiver' => $receiver
+        ]);
 
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo '<div class="message"><strong>' . ucfirst($row['sender']) . ':</strong> ' . $row['message'] . '</div>';
+        if ($messages) {
+            foreach ($messages as $row) {
+                echo '<div class="message"><strong>' . htmlspecialchars(ucfirst($row['sender'])) . ':</strong> ' . htmlspecialchars($row['message']) . '</div>';
+            }
+        } else {
+            echo '<div class="message">No messages found.</div>';
         }
+    } else {
+        echo '<div class="message">Sender and receiver must be provided.</div>';
     }
 }
-
 ?>

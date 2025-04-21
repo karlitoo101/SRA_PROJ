@@ -164,12 +164,12 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
         <div class="chat-messages" id="chatMessages">
             <!-- Sample messages will be populated here -->
         </div>
-        <div class="chat-input">
-            <input type="text" class="message-input" id="messageInput" placeholder="Type a message...">
-            <button class="send-btn" id="sendMessageBtn">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
+        <form class="chat-input" id="chat-form">
+            <input type="hidden" id="sender" value="<?php echo htmlspecialchars($_SESSION['adminName']); ?>">
+            <input type="hidden" id="receiver" value="<?php echo htmlspecialchars($_SESSION['']); ?>">
+            <input type="text" class="message-input" id="messageInput" placeholder="Type your message..." required>
+            <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
     </div>
     
     <script>
@@ -275,17 +275,14 @@ function renderTradersTable() {
         const sendMessageBtn = document.getElementById("sendMessageBtn");
         const chatMessages = document.getElementById("chatMessages");
         
-        // Sample messages for Jane Cooper
-        const sampleMessages = {
-            "Jane Cooper": [  
-         ]
-        };
 
         
         // Function to get initials from name
         function getInitials(name) {
             return name.split(" ").map(part => part.charAt(0)).join("");
         }
+
+
         
         // Function to render chat messages
         function renderMessages(traderNameValue) {
@@ -309,6 +306,49 @@ function renderTradersTable() {
             // Scroll to bottom of messages
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+        // Function to fetch messages
+        function fetchMessages() {
+                var sender = $('#sender').val();
+                var receiver = $('#receiver').val();
+
+                $.ajax({
+                    url: '../../backend/messages/fetch_message.php',
+                    type: 'POST',
+                    data: { sender: sender, receiver: receiver },
+                    success: function (data) {
+                        $('#chatMessages').html(data);
+                        scrollChatToBottom();
+                    }
+                });
+            }
+
+
+            $(document).ready(function () {
+                // Fetch messages every 3 seconds
+
+                fetchMessages();
+                setInterval(fetchMessages, 3000);
+            });
+
+
+            // Submit the chat message
+            $('#chat-form').submit(function (e) {
+                e.preventDefault();
+                var sender = $('#sender').val();
+                var receiver = $('#receiver').val();
+                var message = $('#message').val();
+
+                $.ajax({
+                    url: '../../backend/messages/submit_message.php',
+                    type: 'POST',
+                    data: { sender: sender, receiver: receiver, message: message },
+                    success: function () {
+                        $('#message').val('');
+                        fetchMessages(); // Fetch messages after submitting
+                    }
+                });
+
+            });
         
         // Function to attach message button listeners
         function attachMessageButtonListeners() {

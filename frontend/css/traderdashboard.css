@@ -319,35 +319,31 @@ footer {
     font-size: 14px;
 }
 
-.chat-messages {
-    flex: 1;
-    padding: 15px;
+.chat-box-body {
+    padding: 20px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    /* height: 300px; */
+    height: 65%;
 }
 
 .message {
-    max-width: 80%;
-    padding: 10px 12px;
+    background-color: #f2f2f2;
     border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.4;
+    padding: 10px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
 }
 
-.message-support {
-    background-color: #f0f0f0;
-    align-self: flex-start;
-    border-top-left-radius: 0;
+.message p {
+    margin: 5px 0;
 }
 
-.message-user {
-    background-color: #108a1b;
-    color: white;
-    align-self: flex-end;
-    border-top-right-radius: 0;
-}
+
+
+
+
+
 
 .chat-input {
     display: flex;
