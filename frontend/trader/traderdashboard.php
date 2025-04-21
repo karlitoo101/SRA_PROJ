@@ -105,10 +105,8 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
 
         </div>
         <form class="chat-input" id="chat-form">
-            <input type="hidden" id="sender"
-                value="<?php echo $_SESSION['name']; ?>">
-            <input type="hidden" id="receiver"
-                value="<?php echo $_SESSION['receiverName']; ?>">
+            <input type="hidden" id="sender" value="<?php echo $_SESSION['name']; ?>">
+            <input type="hidden" id="receiver" value="<?php echo $_SESSION['receiverName']; ?>">
             <input type="text" id="message" placeholder="Type your message..." required>
             <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
         </form>
