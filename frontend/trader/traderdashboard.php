@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 0) {
@@ -16,6 +15,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
     <title>Sugar Regulatory Administration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/traderdashboard.css">
+
 </head>
 
 <body>
@@ -114,7 +114,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
             <input type="text" id="message" placeholder="Type your message..." required>
             <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
         </form>
-        <div class="chat-error" id="chat-error" style="color:red; margin-top:10px;"></div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -164,7 +163,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
             const chatWindow = $('.chat-window');
             const chatClose = $('.chat-close');
             const overlay = $('#overlay');
-            const chatError = $('#chat-error'); // error feedback
 
             // Toggle chat window visibility
             chatBubble.on('click', function () {
@@ -172,7 +170,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 chatBubble.css('display', 'none');
                 overlay.css('display', 'block');
                 $('#message').focus();
-                chatError.text(''); // clear errors when opening
             });
 
             // Close chat window
@@ -180,7 +177,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 chatWindow.css('display', 'none');
                 chatBubble.css('display', 'flex');
                 overlay.css('display', 'none');
-                chatError.text('');
             });
 
             // Also close chat when clicking overlay
@@ -189,7 +185,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                     chatWindow.css('display', 'none');
                     chatBubble.css('display', 'flex');
                     overlay.css('display', 'none');
-                    chatError.text('');
                 }
             });
 
@@ -200,21 +195,14 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                     type: 'POST',
                     data: {
                         sender: $('#sender').val(),
-                        receiver: $('#receiver').val()
+                        receiver: $('#receiver').val() // This now always points to admin
                     },
                     success: function (data) {
                         $('#chat-box-body .message-container').html(data);
                         scrollChatToBottom();
-                        chatError.text('');
                     },
                     error: function (xhr, status, error) {
-                        let responseText = "";
-                        try {
-                            responseText = JSON.parse(xhr.responseText);
-                            chatError.text(responseText.error || String(error));
-                        } catch (e) {
-                            chatError.text("Error loading messages: " + String(error));
-                        }
+                        console.error("Error fetching messages:", error);
                         $('#chat-box-body .message-container').html(
                             '<div class="message-error">Error loading messages. Please try again.</div>'
                         );
@@ -233,41 +221,23 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 e.preventDefault();
                 const message = $('#message').val().trim();
 
-                if (message === '') {
-                    chatError.text('Message cannot be empty.');
-                    return;
-                }
+                if (message === '') return;
 
-                chatError.text('Sending...');
                 $.ajax({
                     url: '../../backend/messages/submit_message.php',
                     type: 'POST',
-                    dataType: "json",
                     data: {
                         sender: $('#sender').val(),
                         receiver: $('#receiver').val(),
                         message: message
                     },
-                    success: function (data) {
-                        if (data.success) {
-                            $('#message').val('');
-                            chatError.text(''); // clear error
-                            fetchMessages();
-                        } else if (data.error) {
-                            chatError.text(data.error);
-                        } else {
-                            chatError.text('Unknown server response.');
-                        }
+                    success: function () {
+                        $('#message').val('');
+                        fetchMessages();
                     },
                     error: function (xhr, status, error) {
-                        let errMsg = "Failed to send message.";
-                        try {
-                            const resp = JSON.parse(xhr.responseText);
-                            errMsg = resp.error || errMsg;
-                        } catch (e) {
-                            // Not JSON or unexpected error
-                        }
-                        chatError.text(errMsg);
+                        console.error("Error sending message:", error);
+                        alert('Failed to send message. Please try again.');
                     }
                 });
             });
