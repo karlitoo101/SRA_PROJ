@@ -214,7 +214,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 // Fetch messages every 3 seconds
 
                 fetchMessages();
-                setInterval(fetchMessages, 3000);
+                setInterval(fetchMessages, 1000);
             });
 
 

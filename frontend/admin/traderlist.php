@@ -274,7 +274,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
 
         $(document).ready(function () {
             fetchMessages();
-            setInterval(fetchMessages, 3000);
+            setInterval(fetchMessages, 1000);
         });
     </script>
 </body>
