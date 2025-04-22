@@ -373,13 +373,13 @@ body {
 }
 
 .message {
-    background-color: #ffffff;
+    background-color: #e2e0e0;
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
     max-width: 80%;
     word-wrap: break-word;
-    color: #00843d;
+    color: #000000;
 }
 
 .message p {
