@@ -27,10 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $isOwnMessage = ($row['sender'] === $_POST['sender']);
 
             echo '<div class="message-container ' . ($isOwnMessage ? 'own' : 'other') . '">';
-            echo    '<div class="message">' . $message . '</div>';
+            
             echo    '<div class="meta">';
             echo        '<span class="sender-name">' . $msgSender . '</span>';
             echo        '<span class="timestamp">' . $timestamp . '</span>';
+            echo    '<div class="message">' . $message . '</div>';
 
             if ($isOwnMessage) {
                 echo    '<span class="status">(' . $status . ')</span>';
