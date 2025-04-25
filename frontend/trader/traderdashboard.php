@@ -101,8 +101,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
             </div>
         </div>
         <div class="chat-box-body" id="chat-box-body">
-            <!-- Chat messages will be loaded here -->
-
+            <p class="loading-placeholder">Loading messages...</p>
         </div>
         <form class="chat-input" id="chat-form">
             <input type="hidden" id="sender" value="<?php echo $_SESSION['name']; ?>">
@@ -211,10 +210,8 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
             }
 
             $(document).ready(function () {
-                // Fetch messages every 3 seconds
-
                 fetchMessages();
-                setInterval(fetchMessages, 1000);
+                setInterval(fetchMessages, 5000);
             });
 
 
