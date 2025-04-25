@@ -329,17 +329,20 @@ footer {
 
 
 
+/* Container for each message */
 .message-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; /* Align all messages to the left */
     margin-bottom: 15px;
 }
 
+/* Adjust message appearance based on sender */
 .message-container.own {
-    align-items: flex-start; /* Aligns own messages to the left */
+    align-items: flex-start; /* Left-aligned for sender's own messages */
 }
 
+/* Style for the message bubble */
 .message-container .message {
     background-color: #f0f0f0;
     padding: 10px 15px;
@@ -349,11 +352,13 @@ footer {
     max-width: 80%;
 }
 
+/* For sender's own messages */
 .message-container.own .message {
-    background-color: #d4f7d6;
+    background-color: #d4f7d6; /* Different color for the sender */
     color: black;
 }
 
+/* Sender's name on top of the message */
 .sender-name {
     font-weight: bold;
     color: #444;
@@ -361,6 +366,7 @@ footer {
     text-align: left;
 }
 
+/* Meta information (timestamp and status) */
 .meta {
     font-size: 0.75em;
     color: #888;
@@ -379,14 +385,23 @@ footer {
     color: #007bff;
 }
 
+/* Adjust the message container for sender's own messages */
 .message-container.own .sender-name {
-    text-align: left; /* Sender's name is aligned to the left for own messages */
+    text-align: left; /* Ensure sender's name is left-aligned */
 }
 
 .message-container.own .meta {
-    justify-content: flex-start; /* Meta data (timestamp, status) is aligned to the left for own messages */
+    justify-content: flex-start; /* Ensure meta data is left-aligned */
 }
 
+/* If it's a received message, align to the right */
+.message-container.other {
+    align-items: flex-start; /* Ensure that other (receiver's) messages are aligned left too */
+}
+
+.message-container.other .message {
+    background-color: #e2e0e0;
+}
 
 
 
