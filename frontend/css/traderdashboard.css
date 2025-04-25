@@ -337,7 +337,7 @@ footer {
 }
 
 .message-container.own {
-    align-items: flex-end; /* Aligns own messages to the right */
+    align-items: flex-start; /* Aligns own messages to the left */
 }
 
 .message-container .message {
@@ -372,7 +372,7 @@ footer {
 
 .timestamp {
     font-size: 0.75em;
-    color: #b91818;
+    color: #888;
 }
 
 .status {
@@ -380,11 +380,11 @@ footer {
 }
 
 .message-container.own .sender-name {
-    text-align: right; /* Sender's name is aligned to the right for own messages */
+    text-align: left; /* Sender's name is aligned to the left for own messages */
 }
 
 .message-container.own .meta {
-    justify-content: flex-end; /* Meta data (timestamp, status) is aligned to the right for own messages */
+    justify-content: flex-start; /* Meta data (timestamp, status) is aligned to the left for own messages */
 }
 
 
