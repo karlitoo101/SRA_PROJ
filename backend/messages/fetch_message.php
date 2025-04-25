@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sender = $_POST['sender'];
     $receiver = $_POST['receiver'];
 
-    // Fetch messages between the two users
     $sql = "SELECT * FROM chat_messages 
             WHERE (sender=? AND receiver=?) OR (sender=? AND receiver=?) 
             ORDER BY created_at";
@@ -23,20 +22,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = htmlspecialchars($row['message']);
             $timestamp = date("H:i", strtotime($row['created_at']));
             $status = isset($row['status']) ? htmlspecialchars($row['status']) : '';
-        
-            echo '<div class="message">';
-            echo    '<strong>' . $msgSender . ':</strong> ' . $message;
-            echo    '<div class="timestamp">' . $timestamp;
-        
-            // Only show status for sender's own messages
-            if ($row['sender'] === $_POST['sender']) {
-                echo ' <span class="status">(' . $status . ')</span>';
+
+            // Check if it's the current user's message
+            $isOwnMessage = ($row['sender'] === $_POST['sender']);
+
+            echo '<div class="message-container ' . ($isOwnMessage ? 'own' : 'other') . '">';
+            echo    '<div class="message">' . $message . '</div>';
+            echo    '<div class="meta">';
+            echo        '<span class="sender-name">' . $msgSender . '</span>';
+            echo        '<span class="timestamp">' . $timestamp . '</span>';
+
+            if ($isOwnMessage) {
+                echo    '<span class="status">(' . $status . ')</span>';
             }
-        
+
             echo    '</div>';
             echo '</div>';
         }
-        
     } else {
         echo '<div class="message no-msg">No messages yet.</div>';
     }
