@@ -326,11 +326,7 @@ footer {
     height: 85%;
 }
 
-.loading-placeholder {
-    text-align: center;
-    color: gray;
-    font-style: italic;
-}
+
 
 
 .message {
@@ -345,6 +341,34 @@ footer {
 .message p {
     margin: 5px 0;
 }
+.message {
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.timestamp {
+    font-size: 0.75em;
+    color: #888;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.no-msg {
+    text-align: center;
+    font-style: italic;
+    color: gray;
+}
+.status {
+    font-size: 0.75em;
+    color: #007bff;
+    margin-left: 5px;
+}
+
 
 .chat-input {
     display: flex;

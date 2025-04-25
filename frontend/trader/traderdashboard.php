@@ -101,7 +101,8 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
             </div>
         </div>
         <div class="chat-box-body" id="chat-box-body">
-            <p class="loading-placeholder">Loading messages...</p>
+            <!-- Chat messages will be loaded here -->
+
         </div>
         <form class="chat-input" id="chat-form">
             <input type="hidden" id="sender" value="<?php echo $_SESSION['name']; ?>">
@@ -183,6 +184,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 }
             });
 
+            
 
 
 
@@ -191,7 +193,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 var sender = $('#sender').val();
                 var receiver = $('#receiver').val();
 
-                $('#chat-box-body').html('<p class="loading-placeholder">Loading messages...</p>');
 
                 $.ajax({
                     url: '../../backend/messages/fetch_message.php',
@@ -213,7 +214,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
 
             $(document).ready(function () {
                 fetchMessages();
-                setInterval(fetchMessages, 5000);
+                setInterval(fetchMessages, 3000);
             });
 
 

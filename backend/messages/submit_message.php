@@ -4,22 +4,30 @@ require_once '../dbconnection/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $sender = $_POST['sender'];
-    $receiver = $_POST['receiver'];
-    $message = $_POST['message'];
+    $sender = trim($_POST['sender']);
+    $receiver = trim($_POST['receiver']);
+    $message = trim($_POST['message']);
+
+    if (empty($sender) || empty($receiver) || empty($message)) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Invalid input."]);
+        exit;
+    }
 
     try {
-        $sql = "INSERT INTO chat_messages (sender, receiver, message, created_at) 
-                VALUES (:sender, :receiver, :message, NOW())";
+        $sql = "INSERT INTO chat_messages (sender, receiver, message, status, created_at)
+            VALUES (:sender, :receiver, :message, 'sent', NOW())";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':sender', $sender);
         $stmt->bindParam(':receiver', $receiver);
         $stmt->bindParam(':message', $message);
         $stmt->execute();
+
+        echo json_encode(["status" => "success", "message" => "Message sent."]);
     } catch (PDOException $e) {
         error_log("Message insert failed: " . $e->getMessage());
         http_response_code(500);
-        echo "Error sending message.";
+        echo json_encode(["status" => "error", "message" => "Error sending message."]);
     }
 }
 ?>
