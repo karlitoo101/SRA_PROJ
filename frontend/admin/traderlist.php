@@ -7,13 +7,32 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Traders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="traderlist.css">
+    <style>
+        /* Add these styles for the unread notification dot */
+        .message-btn {
+            position: relative;
+        }
+
+        .unread-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff4757;
+            border-radius: 50%;
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="logo">
@@ -161,14 +180,18 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         let allTraders = [];
+        let unreadMessages = {};
         const searchInput = document.querySelector('.search-input');
         const tableBody = document.getElementById("tradersTableBody");
+        let currentTrader = null;
 
         fetch('../../backend/admin/displaytraders.php')
             .then(response => response.json())
             .then(traders => {
                 allTraders = traders;
                 renderTradersTable();
+                // Fetch unread message counts
+                checkUnreadMessages();
             })
             .catch(error => console.error('Error fetching traders:', error));
 
@@ -192,13 +215,50 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <button class="view-reports-btn" data-trader="${trader.traderName}" data-region="${trader.region}">View Reports</button>
-                            <button class="message-btn" data-trader="${trader.traderName}" data-region="${trader.region}"><i class="fa-solid fa-comment"></i> Message</button>
+                            <button class="message-btn" data-trader="${trader.traderName}" data-region="${trader.region}">
+                                <i class="fa-solid fa-comment"></i> Message
+                                <span class="unread-indicator" id="unread-${trader.traderName.replace(/\s+/g, '-')}"></span>
+                            </button>
                         </div>
                     </td>`;
                 tableBody.appendChild(row);
             });
             attachMessageButtonListeners();
             attachViewReportsButtonListeners();
+            updateUnreadIndicators();
+        }
+
+        function checkUnreadMessages() {
+            $.ajax({
+                url: '../../backend/messages/check_unread.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    unreadMessages = data;
+                    updateUnreadIndicators();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error checking unread messages:', error);
+                }
+            });
+        }
+
+        function updateUnreadIndicators() {
+            // Clear all indicators first
+            document.querySelectorAll('.unread-indicator').forEach(indicator => {
+                indicator.style.display = 'none';
+            });
+
+            // Set indicators for traders with unread messages
+            for (const trader in unreadMessages) {
+                if (unreadMessages[trader] > 0) {
+                    const indicatorId = `unread-${trader.replace(/\s+/g, '-')}`;
+                    const indicator = document.getElementById(indicatorId);
+                    if (indicator) {
+                        indicator.style.display = 'block';
+                    }
+                }
+            }
         }
 
         searchInput.addEventListener('input', renderTradersTable);
@@ -228,12 +288,29 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 button.addEventListener("click", function () {
                     const traderNameValue = this.getAttribute("data-trader");
                     const region = this.getAttribute("data-region");
+
+                    currentTrader = traderNameValue;
+
                     document.getElementById("traderName").textContent = traderNameValue;
                     document.getElementById("traderEmail").textContent = region;
                     document.getElementById("traderInitials").textContent = traderNameValue.split(" ").map(n => n[0]).join("");
                     document.getElementById("receiver").value = traderNameValue;
+
                     chatPanel.classList.add("active");
                     overlay.classList.add("active");
+
+                    // Clear unread indicator
+                    const indicatorId = `unread-${traderNameValue.replace(/\s+/g, '-')}`;
+                    const indicator = document.getElementById(indicatorId);
+                    if (indicator) {
+                        indicator.style.display = 'none';
+                    }
+
+                    // Fetch messages and mark as read
+                    fetchMessages(true);
+
+                    setTimeout(scrollChatToBottom, 100);
+                    setTimeout(scrollChatToBottom, 300);
                 });
             });
         }
@@ -245,20 +322,40 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
         closeChat.addEventListener("click", () => {
             chatPanel.classList.remove("active");
             overlay.classList.remove("active");
+            currentTrader = null;
         });
 
         overlay.addEventListener("click", () => {
             chatPanel.classList.remove("active");
             overlay.classList.remove("active");
+            currentTrader = null;
         });
 
-        function fetchMessages() {
+        function fetchMessages(markAsRead = false) {
             var sender = $('#sender').val();
             var receiver = $('#receiver').val();
-            $.post('../../backend/messages/fetch_message.php', { sender, receiver }, function (data) {
+
+            $.post('../../backend/messages/fetch_message.php', {
+                sender: sender,
+                receiver: receiver,
+                markAsRead: markAsRead.toString()  // Convert boolean to string "true" or "false"
+            }, function (data) {
                 $('#chat-box-body').html(data);
-                $('#chat-box-body').scrollTop($('#chat-box-body')[0].scrollHeight);
+
+
+                scrollChatToBottom();
+
+
+
+                // After marking messages as read, update unread indicators
+                if (markAsRead) {
+                    checkUnreadMessages();
+                }
             });
+        }
+        function scrollChatToBottom() {
+            var chatBox = $('#chat-box-body');
+            chatBox.scrollTop(chatBox.prop("scrollHeight"));
         }
 
         $('#chat-form').submit(function (e) {
@@ -269,13 +366,24 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
             $.post('../../backend/messages/submit_message.php', { sender, receiver, message }, function () {
                 $('#message').val('');
                 fetchMessages();
+                scrollChatToBottom();
             });
         });
 
         $(document).ready(function () {
-            fetchMessages();
-            setInterval(fetchMessages, 1000);
+            // Initial fetch without marking as read
+            fetchMessages(false);
+
+            // Set up intervals for checking messages
+            setInterval(function () {
+                // Only mark as read if chat panel is active
+                fetchMessages(chatPanel.classList.contains('active'));
+            }, 1000);
+
+            // Check for unread messages periodically
+            setInterval(checkUnreadMessages, 5000);
         });
     </script>
 </body>
+
 </html>

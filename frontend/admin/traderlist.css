@@ -280,6 +280,22 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+    position: relative;
+}
+.new-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: -3px;
+    right: -8px;
+    margin-right: 5px;
+}
+
+.message-btn.has-new .new-indicator {
+    display: block;
 }
 
 .report-icon {
@@ -372,18 +388,82 @@ body {
     background-color: #f9fafb;
 }
 
-.message {
-    background-color: #e2e0e0;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    max-width: 100%;
-    word-wrap: break-word;
-    color: #000000;
+/* Container for each message */
+.message-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align all messages to the left */
+    margin-bottom: 15px;
 }
 
-.message p {
-    margin: 5px 0;
+/* Adjust message appearance based on sender */
+.message-container.own {
+    align-items: flex-end; /* Left-aligned for sender's own messages */
+}
+
+/* Style for the message bubble */
+.message-container .message {
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+    border-radius: 10px;
+    display: inline-block;
+    word-wrap: break-word;
+    max-width: 80%;
+}
+
+/* For sender's own messages */
+.message-container.own .message {
+    background-color: #d4f7d6; /* Different color for the sender */
+    color: black;
+}
+
+/* Sender's name on top of the message */
+.sender-name {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 5px;
+    text-align: left;
+    font-size: 0.75em;
+}
+
+/* Meta information (timestamp and status) */
+.meta {
+    font-size: 0.85em;
+    color: #888;
+    display: flex;
+    align-items: center; /* Align them horizontally */
+    gap: 5px;  /* Space between timestamp and status */
+    margin-top: 5px;
+    text-align: left;
+}
+
+.timestamp {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.status {
+    color: #00843d;
+    font-size: 0.85em;
+    font-weight: normal; /* Make it a bit lighter */
+}
+
+/* Adjust the message container for sender's own messages */
+.message-container.own .sender-name {
+    text-align: left; /* Ensure sender's name is left-aligned */
+}
+
+.message-container.own .meta {
+    justify-content: flex-start; /* Ensure meta data is left-aligned */
+}
+
+/* If it's a received message, align to the right */
+.message-container.other {
+    align-items: flex-start; /* Ensure that other (receiver's) messages are aligned left too */
+}
+
+.message-container.other .message {
+    background-color: #e2e0e0;
 }
 
 .chat-input {
@@ -422,7 +502,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #00843d;
+    background-color: #0b8a1b;
     color: white;
     border: none;
     display: flex;

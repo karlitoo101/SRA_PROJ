@@ -90,7 +90,9 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
     <!-- Chat Bubble -->
     <div class="chat-bubble">
         <i class="fa-solid fa-comment"></i>
+        <span class="notification-dot" style="display: none;"></span>
     </div>
+
 
     <!-- Chat Window -->
     <div class="chat-window">
@@ -166,6 +168,8 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 chatBubble.css('display', 'none');
                 overlay.css('display', 'block');
                 $('#message').focus();
+
+                $('.notification-dot').hide(); // 👈 Hide the dot when chat opens
             });
 
             // Close chat window
@@ -184,23 +188,36 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 }
             });
 
-            
-
-
-
             // Function to fetch messages
             function fetchMessages() {
                 var sender = $('#sender').val();
                 var receiver = $('#receiver').val();
-
+                var chatBox = $('#chat-box-body');
+                var chatWindow = $('.chat-window');
+                var notificationDot = $('.notification-dot');
 
                 $.ajax({
                     url: '../../backend/messages/fetch_message.php',
                     type: 'POST',
-                    data: { sender: sender, receiver: receiver },
+                    data: { sender: sender, receiver: receiver, markAsRead: true },
+
                     success: function (data) {
-                        $('#chat-box-body').html(data);
-                        scrollChatToBottom();
+                        // Compare new data with old data
+                        var prevContent = chatBox.html();
+                        chatBox.html(data);
+
+                        // Check for latest message sender if content changed
+                        if (data !== prevContent) {
+                            scrollChatToBottom();
+
+                            // Use jQuery to find the last message container
+                            var lastSender = $('#chat-box-body .message-container:last .sender-name').text().trim();
+
+                            // If it's not the current user, and chat is closed, show the dot
+                            if (lastSender === receiver && !chatWindow.is(':visible')) {
+                                notificationDot.show();
+                            }
+                        }
                     }
                 });
             }
@@ -216,7 +233,6 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 fetchMessages();
                 setInterval(fetchMessages, 3000);
             });
-
 
             // Submit the chat message
             $('#chat-form').submit(function (e) {

@@ -15,8 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
+        // Changed 'sent' to 'Unread' to match your database ENUM and notification logic
         $sql = "INSERT INTO chat_messages (sender, receiver, message, status, created_at)
-            VALUES (:sender, :receiver, :message, 'sent', NOW())";
+            VALUES (:sender, :receiver, :message, 'Unread', NOW())";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':sender', $sender);
         $stmt->bindParam(':receiver', $receiver);
