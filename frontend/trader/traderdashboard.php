@@ -191,6 +191,8 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 var sender = $('#sender').val();
                 var receiver = $('#receiver').val();
 
+                $('#chat-box-body').html('<p class="loading-placeholder">Loading messages...</p>');
+
                 $.ajax({
                     url: '../../backend/messages/fetch_message.php',
                     type: 'POST',
@@ -222,17 +224,23 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                 var receiver = $('#receiver').val();
                 var message = $('#message').val();
 
+                var sendBtn = $('.send-btn');
+                sendBtn.prop('disabled', true); // Disable button
+
                 $.ajax({
                     url: '../../backend/messages/submit_message.php',
                     type: 'POST',
                     data: { sender: sender, receiver: receiver, message: message },
                     success: function () {
                         $('#message').val('');
-                        fetchMessages(); // Fetch messages after submitting
+                        fetchMessages(); // Fetch after sending
+                    },
+                    complete: function () {
+                        sendBtn.prop('disabled', false); // Re-enable button
                     }
                 });
-
             });
+
         });
     </script>
 </body>
