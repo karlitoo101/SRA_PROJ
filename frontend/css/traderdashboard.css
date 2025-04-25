@@ -337,7 +337,7 @@ footer {
 }
 
 .message-container.own {
-    align-items: flex-end;
+    align-items: flex-end; /* Aligns own messages to the right */
 }
 
 .message-container .message {
@@ -354,17 +354,20 @@ footer {
     color: black;
 }
 
-.meta {
-    font-size: 0.75em;
-    color: #666;
-    margin-top: 4px;
-    display: flex;
-    gap: 8px;
-}
-
 .sender-name {
     font-weight: bold;
     color: #444;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.meta {
+    font-size: 0.75em;
+    color: #888;
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+    text-align: left;
 }
 
 .timestamp {
@@ -375,6 +378,15 @@ footer {
 .status {
     color: #007bff;
 }
+
+.message-container.own .sender-name {
+    text-align: right; /* Sender's name is aligned to the right for own messages */
+}
+
+.message-container.own .meta {
+    justify-content: flex-end; /* Meta data (timestamp, status) is aligned to the right for own messages */
+}
+
 
 
 
