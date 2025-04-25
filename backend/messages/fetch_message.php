@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo '<div class="sender-name">' . $msgSender . '</div>';
             echo '<div class="message">' . $message . '</div>';
             echo '<div class="meta">';
+            echo '</div>';
             echo '<span class="timestamp">' . $timestamp . '</span>';
             if ($isOwnMessage) {
                 echo    '<span class="status">' . $status . '</span>';
