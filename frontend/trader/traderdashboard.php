@@ -57,7 +57,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['is_admin']) || $_SESSION['i
                     <i class="fa-solid fa-clock"></i>
                 </div>
                 <h3>Real-time Updates</h3>
-                <p>Stay updated with real-time notifications, market trends, and instant chats for seamless
+                <p>Stay updated with real-time notifications and instant chats for seamless
                     communication.</p>
             </div>
         </div>
